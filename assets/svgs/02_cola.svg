@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="800" height="800">
+  <defs>
+    <linearGradient id="furGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FDBE65"/>
+      <stop offset="65%" stop-color="#F69B42"/>
+      <stop offset="100%" stop-color="#E57C29"/>
+    </linearGradient>
+    <linearGradient id="creamGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFDF7"/>
+      <stop offset="100%" stop-color="#F7E5C8"/>
+    </linearGradient>
+    <linearGradient id="scarfGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#48A878"/>
+      <stop offset="60%" stop-color="#348C60"/>
+      <stop offset="100%" stop-color="#256E4A"/>
+    </linearGradient>
+    <linearGradient id="scarfLight" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#68C393"/>
+      <stop offset="100%" stop-color="#48A878"/>
+    </linearGradient>
+    <linearGradient id="eggGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFDF9"/>
+      <stop offset="70%" stop-color="#F7EAD6"/>
+      <stop offset="100%" stop-color="#E5CEAE"/>
+    </linearGradient>
+  </defs>
+  <g id="02_cola">
+    <path d="M 475 615 C 520 650, 615 625, 620 545 C 625 475, 560 440, 520 465 C 485 485, 495 535, 530 540 C 555 542, 565 515, 545 505 C 535 500, 520 512, 510 535 C 480 550, 465 585, 475 615 Z" fill="url(#furGrad)" stroke="#4A2518" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 520 465 C 555 445, 615 475, 620 535 C 605 515, 585 525, 575 510 C 565 525, 540 520, 530 538 C 500 530, 492 485, 520 465 Z" fill="url(#creamGrad)"/>
+    <path d="M 475 615 C 520 650, 615 625, 622 550 L 632 542 L 618 525 C 618 475, 560 440, 520 465 C 485 485, 495 535, 530 540 C 555 542, 562 520, 548 508" fill="none" stroke="#4A2518" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  </g></svg>

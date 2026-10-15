@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="800" height="800">
+  <defs>
+    <linearGradient id="furGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FDBE65"/>
+      <stop offset="65%" stop-color="#F69B42"/>
+      <stop offset="100%" stop-color="#E57C29"/>
+    </linearGradient>
+    <linearGradient id="creamGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFDF7"/>
+      <stop offset="100%" stop-color="#F7E5C8"/>
+    </linearGradient>
+    <linearGradient id="scarfGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#48A878"/>
+      <stop offset="60%" stop-color="#348C60"/>
+      <stop offset="100%" stop-color="#256E4A"/>
+    </linearGradient>
+    <linearGradient id="scarfLight" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#68C393"/>
+      <stop offset="100%" stop-color="#48A878"/>
+    </linearGradient>
+    <linearGradient id="eggGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFDF9"/>
+      <stop offset="70%" stop-color="#F7EAD6"/>
+      <stop offset="100%" stop-color="#E5CEAE"/>
+    </linearGradient>
+  </defs>
+  <g id="11c_rostro_llorar">
+    <ellipse cx="298" cy="372" rx="26" ry="14" fill="#F48B82" opacity="0.6"/>
+    <ellipse cx="502" cy="372" rx="26" ry="14" fill="#F48B82" opacity="0.6"/>
+    <ellipse cx="344" cy="338" rx="19" ry="20" fill="#4A2518"/>
+    <circle cx="337" cy="330" r="7.5" fill="#FFFFFF"/>
+    <ellipse cx="456" cy="338" rx="19" ry="20" fill="#4A2518"/>
+    <circle cx="449" cy="330" r="7.5" fill="#FFFFFF"/>
+    <path d="M 318 312 Q 338 308 358 320" fill="none" stroke="#4A2518" stroke-width="7" stroke-linecap="round"/>
+    <path d="M 482 312 Q 462 308 442 320" fill="none" stroke="#4A2518" stroke-width="7" stroke-linecap="round"/>
+    <path d="M 326 355 C 314 378, 314 405, 326 410 C 338 405, 338 378, 326 355 Z" fill="#6EC6FF" stroke="#4A2518" stroke-width="5"/>
+    <path d="M 474 355 C 462 378, 462 405, 474 410 C 486 405, 486 378, 474 355 Z" fill="#6EC6FF" stroke="#4A2518" stroke-width="5"/>
+    <path d="M 385 358 C 385 350, 415 350, 415 358 C 415 367, 405 374, 400 374 C 395 374, 385 367, 385 358 Z" fill="#4A2518"/>
+    <path d="M 374 398 Q 400 378 426 398" fill="none" stroke="#4A2518" stroke-width="8" stroke-linecap="round"/>
+  </g></svg>

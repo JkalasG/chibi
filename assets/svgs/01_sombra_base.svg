@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="800" height="800">
+  <defs>
+    <linearGradient id="furGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FDBE65"/>
+      <stop offset="65%" stop-color="#F69B42"/>
+      <stop offset="100%" stop-color="#E57C29"/>
+    </linearGradient>
+    <linearGradient id="creamGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFDF7"/>
+      <stop offset="100%" stop-color="#F7E5C8"/>
+    </linearGradient>
+    <linearGradient id="scarfGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#48A878"/>
+      <stop offset="60%" stop-color="#348C60"/>
+      <stop offset="100%" stop-color="#256E4A"/>
+    </linearGradient>
+    <linearGradient id="scarfLight" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#68C393"/>
+      <stop offset="100%" stop-color="#48A878"/>
+    </linearGradient>
+    <linearGradient id="eggGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFDF9"/>
+      <stop offset="70%" stop-color="#F7EAD6"/>
+      <stop offset="100%" stop-color="#E5CEAE"/>
+    </linearGradient>
+  </defs>
+  <g id="01_sombra_base">
+    <ellipse cx="400" cy="690" rx="195" ry="32" fill="#D5CDD8" opacity="0.65"/>
+    <ellipse cx="400" cy="690" rx="150" ry="20" fill="#BEB4C2" opacity="0.5"/>
+  </g></svg>

@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="800" height="800">
+  <defs>
+    <linearGradient id="furGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FDBE65"/>
+      <stop offset="65%" stop-color="#F69B42"/>
+      <stop offset="100%" stop-color="#E57C29"/>
+    </linearGradient>
+    <linearGradient id="creamGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFDF7"/>
+      <stop offset="100%" stop-color="#F7E5C8"/>
+    </linearGradient>
+    <linearGradient id="scarfGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#48A878"/>
+      <stop offset="60%" stop-color="#348C60"/>
+      <stop offset="100%" stop-color="#256E4A"/>
+    </linearGradient>
+    <linearGradient id="scarfLight" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#68C393"/>
+      <stop offset="100%" stop-color="#48A878"/>
+    </linearGradient>
+    <linearGradient id="eggGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFDF9"/>
+      <stop offset="70%" stop-color="#F7EAD6"/>
+      <stop offset="100%" stop-color="#E5CEAE"/>
+    </linearGradient>
+  </defs>
+  <g id="03_cuerpo_torso">
+    <path d="M 295 440 C 265 510, 260 615, 295 660 C 330 695, 470 695, 505 660 C 540 615, 535 510, 505 440 Z" fill="url(#furGrad)" stroke="#4A2518" stroke-width="10" stroke-linejoin="round"/>
+    <path d="M 325 465 C 300 525, 305 625, 345 662 C 375 682, 425 682, 455 662 C 495 625, 500 525, 475 465 Z" fill="url(#creamGrad)"/>
+    <path d="M 282 575 C 295 555, 325 560, 338 590" fill="none" stroke="#4A2518" stroke-width="9" stroke-linecap="round"/>
+    <path d="M 518 575 C 505 555, 475 560, 462 590" fill="none" stroke="#4A2518" stroke-width="9" stroke-linecap="round"/>
+    <path d="M 295 440 C 265 510, 260 615, 295 660 C 330 695, 470 695, 505 660 C 540 615, 535 510, 505 440 Z" fill="none" stroke="#4A2518" stroke-width="10" stroke-linejoin="round"/>
+  </g></svg>

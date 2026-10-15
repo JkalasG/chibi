@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="800" height="800">
+  <defs>
+    <linearGradient id="furGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FDBE65"/>
+      <stop offset="65%" stop-color="#F69B42"/>
+      <stop offset="100%" stop-color="#E57C29"/>
+    </linearGradient>
+    <linearGradient id="creamGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFDF7"/>
+      <stop offset="100%" stop-color="#F7E5C8"/>
+    </linearGradient>
+    <linearGradient id="scarfGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#48A878"/>
+      <stop offset="60%" stop-color="#348C60"/>
+      <stop offset="100%" stop-color="#256E4A"/>
+    </linearGradient>
+    <linearGradient id="scarfLight" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#68C393"/>
+      <stop offset="100%" stop-color="#48A878"/>
+    </linearGradient>
+    <linearGradient id="eggGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFDF9"/>
+      <stop offset="70%" stop-color="#F7EAD6"/>
+      <stop offset="100%" stop-color="#E5CEAE"/>
+    </linearGradient>
+  </defs>
+  <g id="11_rostro_sonreir">
+    <ellipse cx="298" cy="366" rx="26" ry="15" fill="#F48B82" opacity="0.85"/>
+    <ellipse cx="502" cy="366" rx="26" ry="15" fill="#F48B82" opacity="0.85"/>
+    <path d="M 322 342 C 330 320, 358 320, 366 342" fill="none" stroke="#4A2518" stroke-width="11" stroke-linecap="round"/>
+    <path d="M 434 342 C 442 320, 470 320, 478 342" fill="none" stroke="#4A2518" stroke-width="11" stroke-linecap="round"/>
+    <path d="M 384 356 C 384 348, 416 348, 416 356 C 416 366, 406 374, 400 374 C 394 374, 384 366, 384 356 Z" fill="#4A2518"/>
+    <path d="M 400 372 L 400 382" fill="none" stroke="#4A2518" stroke-width="8" stroke-linecap="round"/>
+    <path d="M 366 382 C 374 398, 394 398, 400 382 C 406 398, 426 398, 434 382" fill="none" stroke="#4A2518" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  </g></svg>

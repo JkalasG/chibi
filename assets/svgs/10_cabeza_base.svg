@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="800" height="800">
+  <defs>
+    <linearGradient id="furGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FDBE65"/>
+      <stop offset="65%" stop-color="#F69B42"/>
+      <stop offset="100%" stop-color="#E57C29"/>
+    </linearGradient>
+    <linearGradient id="creamGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFDF7"/>
+      <stop offset="100%" stop-color="#F7E5C8"/>
+    </linearGradient>
+    <linearGradient id="scarfGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#48A878"/>
+      <stop offset="60%" stop-color="#348C60"/>
+      <stop offset="100%" stop-color="#256E4A"/>
+    </linearGradient>
+    <linearGradient id="scarfLight" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#68C393"/>
+      <stop offset="100%" stop-color="#48A878"/>
+    </linearGradient>
+    <linearGradient id="eggGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFDF9"/>
+      <stop offset="70%" stop-color="#F7EAD6"/>
+      <stop offset="100%" stop-color="#E5CEAE"/>
+    </linearGradient>
+  </defs>
+  <g id="10_cabeza_base">
+    <path d="M 400 205 C 425 205, 445 212, 458 218 C 475 182, 502 155, 518 162 C 535 168, 548 225, 538 282 C 555 308, 562 332, 572 342 L 555 352 C 565 368, 568 382, 552 398 C 522 428, 465 442, 400 442 C 335 442, 278 428, 248 398 C 232 382, 235 368, 245 352 L 228 342 C 238 332, 245 308, 262 282 C 252 225, 265 168, 282 162 C 298 155, 325 182, 342 218 C 355 212, 375 205, 400 205 Z" fill="url(#furGrad)" stroke="#4A2518" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 282 262 C 276 225, 284 190, 294 188 C 304 186, 322 212, 330 232 C 312 240, 295 250, 282 262 Z" fill="#F39A8E"/>
+    <path d="M 518 262 C 524 225, 516 190, 506 188 C 496 186, 478 212, 470 232 C 488 240, 505 250, 518 262 Z" fill="#F39A8E"/>
+    <path d="M 255 375 C 262 342, 305 332, 345 348 C 368 358, 382 332, 400 332 C 418 332, 432 358, 455 348 C 495 332, 538 342, 545 375 C 550 405, 495 436, 400 436 C 305 436, 250 405, 255 375 Z" fill="url(#creamGrad)"/>
+    <ellipse cx="352" cy="295" rx="14" ry="9" transform="rotate(18 352 295)" fill="#FFFDF7"/>
+    <ellipse cx="448" cy="295" rx="14" ry="9" transform="rotate(-18 448 295)" fill="#FFFDF7"/>
+    <path d="M 400 205 C 425 205, 445 212, 458 218 C 475 182, 502 155, 518 162 C 535 168, 548 225, 538 282 C 555 308, 562 332, 572 342 L 555 352 C 565 368, 568 382, 552 398 C 522 428, 465 442, 400 442 C 335 442, 278 428, 248 398 C 232 382, 235 368, 245 352 L 228 342 C 238 332, 245 308, 262 282 C 252 225, 265 168, 282 162 C 298 155, 325 182, 342 218 C 355 212, 375 205, 400 205 Z" fill="none" stroke="#4A2518" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  </g></svg>

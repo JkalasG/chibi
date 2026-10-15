@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="800" height="800">
+  <defs>
+    <linearGradient id="furGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FDBE65"/>
+      <stop offset="65%" stop-color="#F69B42"/>
+      <stop offset="100%" stop-color="#E57C29"/>
+    </linearGradient>
+    <linearGradient id="creamGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFDF7"/>
+      <stop offset="100%" stop-color="#F7E5C8"/>
+    </linearGradient>
+    <linearGradient id="scarfGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#48A878"/>
+      <stop offset="60%" stop-color="#348C60"/>
+      <stop offset="100%" stop-color="#256E4A"/>
+    </linearGradient>
+    <linearGradient id="scarfLight" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#68C393"/>
+      <stop offset="100%" stop-color="#48A878"/>
+    </linearGradient>
+    <linearGradient id="eggGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFDF9"/>
+      <stop offset="70%" stop-color="#F7EAD6"/>
+      <stop offset="100%" stop-color="#E5CEAE"/>
+    </linearGradient>
+  </defs>
+  <g id="07_brazo_derecho">
+    <path d="M 510 450 C 545 485, 542 555, 505 578 C 475 595, 440 580, 435 552 C 432 525, 458 505, 478 495 C 488 480, 490 460, 510 450 Z" fill="url(#furGrad)" stroke="#4A2518" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 478 584 C 452 588, 436 570, 435 550 C 435 530, 452 515, 470 515 C 488 528, 492 562, 478 584 Z" fill="url(#creamGrad)"/>
+    <path d="M 442 540 C 452 542, 458 545, 462 550" fill="none" stroke="#4A2518" stroke-width="6" stroke-linecap="round"/>
+    <path d="M 445 560 C 455 562, 460 564, 465 568" fill="none" stroke="#4A2518" stroke-width="6" stroke-linecap="round"/>
+    <path d="M 510 450 C 545 485, 542 555, 505 578 C 475 595, 440 580, 435 552 C 432 525, 458 505, 478 495" fill="none" stroke="#4A2518" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  </g></svg>
