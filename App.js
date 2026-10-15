@@ -1,438 +1,402 @@
-import React, { useState, useEffect, useRef } from 'react';
-import {
-  StyleSheet, Text, View, TextInput, TouchableOpacity,
-  ScrollView, SafeAreaView, KeyboardAvoidingView, Platform, Animated, Easing
-} from 'react-native';
-import { SvgXml } from 'react-native-svg';
+import React, { useState, useEffect, useRef } from "react";
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView, SafeAreaView, KeyboardAvoidingView, Platform, Animated, Easing } from "react-native";
+import { SvgXml } from "react-native-svg";
 
 const STAGE_SIZE = 280;
 
-// ============================================================================
-// DISEÑOS VECTORIALES HD KAWAAI Y MULTI-CAPA
-// ============================================================================
 const DEFS = `
   <defs>
     <linearGradient id="furGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#FFC875"/>
-      <stop offset="60%" stop-color="#F69B42"/>
-      <stop offset="100%" stop-color="#E57C29"/>
+      <stop offset="0%" stop-color="#FFD08A"/>
+      <stop offset="55%" stop-color="#F69B42"/>
+      <stop offset="100%" stop-color="#D97425"/>
     </linearGradient>
     <linearGradient id="creamGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#FFFFFF"/>
-      <stop offset="100%" stop-color="#F7E5C8"/>
+      <stop offset="0%" stop-color="#FFFCF4"/>
+      <stop offset="100%" stop-color="#F5DFB5"/>
     </linearGradient>
     <linearGradient id="scarfGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#55C48A"/>
-      <stop offset="60%" stop-color="#348C60"/>
-      <stop offset="100%" stop-color="#1E583B"/>
+      <stop offset="0%" stop-color="#5DD496"/>
+      <stop offset="55%" stop-color="#2E8C5E"/>
+      <stop offset="100%" stop-color="#1A5C3A"/>
     </linearGradient>
     <linearGradient id="eggGrad" x1="0%" y1="0%" x2="0%" y2="100%">
       <stop offset="0%" stop-color="#FFFFFF"/>
-      <stop offset="75%" stop-color="#F7EAD6"/>
-      <stop offset="100%" stop-color="#DFCBAB"/>
+      <stop offset="70%" stop-color="#F4E2C8"/>
+      <stop offset="100%" stop-color="#DCC8A0"/>
     </linearGradient>
+    <radialGradient id="eyeL" cx="38%" cy="32%" r="58%">
+      <stop offset="0%" stop-color="#5535AA"/>
+      <stop offset="50%" stop-color="#1E0E4A"/>
+      <stop offset="100%" stop-color="#0A0520"/>
+    </radialGradient>
+    <radialGradient id="eyeR" cx="62%" cy="32%" r="58%">
+      <stop offset="0%" stop-color="#5535AA"/>
+      <stop offset="50%" stop-color="#1E0E4A"/>
+      <stop offset="100%" stop-color="#0A0520"/>
+    </radialGradient>
+    <radialGradient id="cheekGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FF8FAA" stop-opacity="0.95"/>
+      <stop offset="60%" stop-color="#FF6080" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#FF4060" stop-opacity="0.0"/>
+    </radialGradient>
+    <radialGradient id="noseGrad" cx="40%" cy="35%" r="60%">
+      <stop offset="0%" stop-color="#7A4040"/>
+      <stop offset="100%" stop-color="#2E1010"/>
+    </radialGradient>
   </defs>
 `;
 
-const wrapSvg = (content) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800">${DEFS}${content}</svg>`;
+const wrapSvg = (c) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800">${DEFS}${c}</svg>`;
+
+const EYES_N = `
+  <ellipse cx="316" cy="294" rx="40" ry="44" fill="#18083A"/>
+  <ellipse cx="316" cy="294" rx="36" ry="40" fill="url(#eyeL)"/>
+  <ellipse cx="304" cy="280" rx="13" ry="15" fill="#7050C0" opacity="0.55"/>
+  <ellipse cx="302" cy="276" rx="9" ry="10" fill="#FFFFFF" opacity="0.98"/>
+  <circle cx="330" cy="308" r="5" fill="#FFFFFF" opacity="0.7"/>
+  <ellipse cx="484" cy="294" rx="40" ry="44" fill="#18083A"/>
+  <ellipse cx="484" cy="294" rx="36" ry="40" fill="url(#eyeR)"/>
+  <ellipse cx="472" cy="280" rx="13" ry="15" fill="#7050C0" opacity="0.55"/>
+  <ellipse cx="470" cy="276" rx="9" ry="10" fill="#FFFFFF" opacity="0.98"/>
+  <circle cx="498" cy="308" r="5" fill="#FFFFFF" opacity="0.7"/>
+`;
+const EYES_H = `
+  <path d="M 282 288 C 292 262, 322 256, 352 272 C 348 294, 326 308, 300 302 Z" fill="#18083A"/>
+  <path d="M 448 288 C 458 262, 488 256, 518 272 C 514 294, 492 308, 466 302 Z" fill="#18083A"/>
+`;
+const EYES_S = `
+  <ellipse cx="316" cy="300" rx="38" ry="42" fill="#18083A"/>
+  <ellipse cx="316" cy="300" rx="34" ry="38" fill="url(#eyeL)"/>
+  <ellipse cx="305" cy="287" rx="11" ry="13" fill="#6048B0" opacity="0.5"/>
+  <ellipse cx="303" cy="284" rx="8" ry="9" fill="#FFFFFF" opacity="0.9"/>
+  <path d="M 282 256 C 296 268, 330 268, 346 254" fill="none" stroke="#3A1A08" stroke-width="8" stroke-linecap="round"/>
+  <ellipse cx="484" cy="300" rx="38" ry="42" fill="#18083A"/>
+  <ellipse cx="484" cy="300" rx="34" ry="38" fill="url(#eyeR)"/>
+  <ellipse cx="473" cy="287" rx="11" ry="13" fill="#6048B0" opacity="0.5"/>
+  <ellipse cx="471" cy="284" rx="8" ry="9" fill="#FFFFFF" opacity="0.9"/>
+  <path d="M 454 254 C 470 268, 504 268, 518 256" fill="none" stroke="#3A1A08" stroke-width="8" stroke-linecap="round"/>
+`;
+const CHEEKS = `<ellipse cx="262" cy="360" rx="44" ry="30" fill="url(#cheekGrad)"/><ellipse cx="538" cy="360" rx="44" ry="30" fill="url(#cheekGrad)"/>`;
+const BIGCHK = `<ellipse cx="255" cy="358" rx="54" ry="36" fill="url(#cheekGrad)" opacity="0.92"/><ellipse cx="545" cy="358" rx="54" ry="36" fill="url(#cheekGrad)" opacity="0.92"/>`;
+const NOSE   = `<ellipse cx="400" cy="358" rx="20" ry="13" fill="url(#noseGrad)"/><ellipse cx="394" cy="353" rx="7" ry="5" fill="#8A5050" opacity="0.55"/>`;
+const SMILE  = `<path d="M 372 378 C 382 394, 394 398, 400 398 C 406 398, 418 394, 428 378" fill="none" stroke="#3A1A08" stroke-width="9" stroke-linecap="round"/>`;
+const BIGMTH = `<path d="M 364 376 L 436 376 C 436 412, 418 426, 400 426 C 382 426, 364 412, 364 376 Z" fill="#A03030" stroke="#3A1A08" stroke-width="7"/><ellipse cx="400" cy="400" rx="20" ry="11" fill="#CC4848" opacity="0.65"/>`;
+const SADMTH = `<path d="M 374 396 C 384 380, 398 375, 400 375 C 402 375, 416 380, 426 396" fill="none" stroke="#3A1A08" stroke-width="9" stroke-linecap="round"/>`;
+const BROW_H = `<path d="M 284 255 C 298 244, 334 244, 350 255" fill="none" stroke="#3A1A08" stroke-width="7" stroke-linecap="round"/><path d="M 450 255 C 466 244, 502 244, 516 255" fill="none" stroke="#3A1A08" stroke-width="7" stroke-linecap="round"/>`;
+const BROW_S = `<path d="M 284 255 C 298 266, 334 266, 350 255" fill="none" stroke="#3A1A08" stroke-width="7" stroke-linecap="round"/><path d="M 450 255 C 466 266, 502 266, 516 255" fill="none" stroke="#3A1A08" stroke-width="7" stroke-linecap="round"/>`;
 
 const SVGS = {
-  sombra: wrapSvg(`
-    <ellipse cx="400" cy="690" rx="195" ry="32" fill="#D5CDD8" opacity="0.65"/>
-    <ellipse cx="400" cy="690" rx="140" ry="18" fill="#BEB4C2" opacity="0.5"/>
-  `),
-  // FASE 0: Huevo entero inicial con huellita
+  sombra: wrapSvg(`<ellipse cx="400" cy="696" rx="215" ry="26" fill="#C8C0CE" opacity="0.5"/><ellipse cx="400" cy="696" rx="150" ry="15" fill="#B0A8B8" opacity="0.38"/>`),
   egg_phase0: wrapSvg(`
-    <path d="M 400 180 C 260 180, 215 410, 230 545 C 245 655, 320 685, 400 685 C 480 685, 555 655, 570 545 C 585 410, 540 180, 400 180 Z" fill="url(#eggGrad)" stroke="#4A2518" stroke-width="12" stroke-linejoin="round"/>
-    <ellipse cx="330" cy="285" rx="30" ry="55" transform="rotate(24 330 285)" fill="#FFFFFF" opacity="0.8"/>
-    <g transform="translate(0, 15)">
-      <ellipse cx="400" cy="465" rx="44" ry="36" fill="#F4A59E" stroke="#4A2518" stroke-width="6"/>
-      <ellipse cx="348" cy="405" rx="18" ry="24" transform="rotate(-22 348 405)" fill="#F4A59E" stroke="#4A2518" stroke-width="6"/>
-      <ellipse cx="382" cy="385" rx="18" ry="25" transform="rotate(-6 382 385)" fill="#F4A59E" stroke="#4A2518" stroke-width="6"/>
-      <ellipse cx="418" cy="385" rx="18" ry="25" transform="rotate(6 418 385)" fill="#F4A59E" stroke="#4A2518" stroke-width="6"/>
-      <ellipse cx="452" cy="405" rx="18" ry="24" transform="rotate(22 452 405)" fill="#F4A59E" stroke="#4A2518" stroke-width="6"/>
+    <ellipse cx="400" cy="692" rx="190" ry="20" fill="#C8C0CE" opacity="0.38"/>
+    <path d="M 400 162 C 244 162, 196 404, 215 554 C 232 664, 318 695, 400 695 C 482 695, 568 664, 585 554 C 604 404, 556 162, 400 162 Z" fill="url(#eggGrad)" stroke="#3A1A08" stroke-width="11" stroke-linejoin="round"/>
+    <ellipse cx="340" cy="272" rx="26" ry="58" transform="rotate(22 340 272)" fill="#FFFFFF" opacity="0.68"/>
+    <ellipse cx="358" cy="260" rx="9" ry="26" transform="rotate(22 358 260)" fill="#FFFFFF" opacity="0.45"/>
+    <g transform="translate(0,20)">
+      <ellipse cx="400" cy="468" rx="48" ry="40" fill="#F2A09A" stroke="#3A1A08" stroke-width="5.5"/>
+      <ellipse cx="346" cy="408" rx="18" ry="26" transform="rotate(-22 346 408)" fill="#F2A09A" stroke="#3A1A08" stroke-width="5"/>
+      <ellipse cx="382" cy="386" rx="18" ry="27" transform="rotate(-7 382 386)" fill="#F2A09A" stroke="#3A1A08" stroke-width="5"/>
+      <ellipse cx="418" cy="386" rx="18" ry="27" transform="rotate(7 418 386)" fill="#F2A09A" stroke="#3A1A08" stroke-width="5"/>
+      <ellipse cx="454" cy="408" rx="18" ry="26" transform="rotate(22 454 408)" fill="#F2A09A" stroke="#3A1A08" stroke-width="5"/>
     </g>
   `),
-  // FASE 1: 1er gasto (Grieta leve)
   egg_phase1: wrapSvg(`
-    <path d="M 400 180 C 260 180, 215 410, 230 545 C 245 655, 320 685, 400 685 C 480 685, 555 655, 570 545 C 585 410, 540 180, 400 180 Z" fill="url(#eggGrad)" stroke="#4A2518" stroke-width="12" stroke-linejoin="round"/>
-    <path d="M 310 320 L 340 345 L 325 375 L 355 395" fill="none" stroke="#4A2518" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
-    <ellipse cx="330" cy="285" rx="30" ry="55" transform="rotate(24 330 285)" fill="#FFFFFF" opacity="0.8"/>
+    <ellipse cx="400" cy="692" rx="190" ry="20" fill="#C8C0CE" opacity="0.38"/>
+    <path d="M 400 162 C 244 162, 196 404, 215 554 C 232 664, 318 695, 400 695 C 482 695, 568 664, 585 554 C 604 404, 556 162, 400 162 Z" fill="url(#eggGrad)" stroke="#3A1A08" stroke-width="11" stroke-linejoin="round"/>
+    <path d="M 314 316 L 346 346 L 328 380 L 360 402 L 374 384" fill="none" stroke="#3A1A08" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 316 320 L 344 346 L 330 376 L 358 398" fill="#EACDA0" stroke="none" opacity="0.55"/>
+    <ellipse cx="340" cy="272" rx="26" ry="58" transform="rotate(22 340 272)" fill="#FFFFFF" opacity="0.68"/>
   `),
-  // FASE 2: 2do gasto (Grietas avanzadas)
   egg_phase2: wrapSvg(`
-    <path d="M 400 180 C 260 180, 215 410, 230 545 C 245 655, 320 685, 400 685 C 480 685, 555 655, 570 545 C 585 410, 540 180, 400 180 Z" fill="url(#eggGrad)" stroke="#4A2518" stroke-width="12" stroke-linejoin="round"/>
-    <path d="M 280 290 L 330 320 L 310 360 L 350 390 L 390 370 L 440 400 L 480 360 L 510 380" fill="none" stroke="#4A2518" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
-    <ellipse cx="330" cy="285" rx="30" ry="55" transform="rotate(24 330 285)" fill="#FFFFFF" opacity="0.8"/>
+    <ellipse cx="400" cy="692" rx="190" ry="20" fill="#C8C0CE" opacity="0.38"/>
+    <path d="M 400 162 C 244 162, 196 404, 215 554 C 232 664, 318 695, 400 695 C 482 695, 568 664, 585 554 C 604 404, 556 162, 400 162 Z" fill="url(#eggGrad)" stroke="#3A1A08" stroke-width="11" stroke-linejoin="round"/>
+    <path d="M 276 288 L 332 322 L 308 366 L 356 398 L 400 374 L 448 404 L 490 362 L 522 385" fill="none" stroke="#3A1A08" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 356 398 L 355 446 L 370 460" fill="none" stroke="#3A1A08" stroke-width="7" stroke-linecap="round"/>
+    <path d="M 400 374 L 401 334 L 415 312" fill="none" stroke="#3A1A08" stroke-width="6" stroke-linecap="round"/>
+    <ellipse cx="340" cy="272" rx="26" ry="58" transform="rotate(22 340 272)" fill="#FFFFFF" opacity="0.62"/>
   `),
-  // FASE 3: 3er gasto (¡Nacimiento!)
   egg_phase3: wrapSvg(`
-    <path d="M 230 545 C 245 655, 320 685, 400 685 C 480 685, 555 655, 570 545 L 530 420 L 460 450 L 380 420 L 300 450 Z" fill="url(#eggGrad)" stroke="#4A2518" stroke-width="12" stroke-linejoin="round"/>
-    <path d="M 310 280 C 350 240, 450 240, 500 290 L 440 330 L 360 300 Z" fill="url(#eggGrad)" stroke="#4A2518" stroke-width="10" stroke-linejoin="round" transform="translate(45, -35) rotate(18)"/>
+    <ellipse cx="400" cy="692" rx="190" ry="20" fill="#C8C0CE" opacity="0.38"/>
+    <path d="M 215 554 C 232 664, 318 695, 400 695 C 482 695, 568 664, 585 554 L 538 414 L 462 452 L 378 415 L 300 454 Z" fill="url(#eggGrad)" stroke="#3A1A08" stroke-width="10" stroke-linejoin="round"/>
+    <path d="M 296 292 C 340 244, 456 240, 504 298 L 442 334 L 360 300 Z" fill="url(#eggGrad)" stroke="#3A1A08" stroke-width="9" stroke-linejoin="round" transform="translate(54,-42) rotate(21 400 300)"/>
+    <path d="M 236 198 L 246 198 M 241 193 L 241 203" stroke="#FFD700" stroke-width="5" stroke-linecap="round"/>
+    <path d="M 562 175 L 574 175 M 568 170 L 568 180" stroke="#FFD700" stroke-width="5" stroke-linecap="round"/>
   `),
-  // CAPAS DEL BEBE SHIBA
   cola: wrapSvg(`
-    <path d="M 475 615 C 520 650, 615 625, 620 545 C 625 475, 560 440, 520 465 C 485 485, 495 535, 530 540 C 555 542, 565 515, 545 505 C 535 500, 520 512, 510 535 C 480 550, 465 585, 475 615 Z" fill="url(#furGrad)" stroke="#4A2518" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M 520 465 C 555 445, 615 475, 620 535 C 605 515, 585 525, 575 510 C 565 525, 540 520, 530 538 C 500 530, 492 485, 520 465 Z" fill="url(#creamGrad)"/>
+    <path d="M 470 620 C 488 664, 548 686, 614 664 C 660 644, 672 594, 656 546 C 642 504, 604 482, 570 494 C 540 504, 528 540, 554 558 C 572 570, 590 554, 576 540 C 562 528, 540 532, 528 552 C 506 578, 492 604, 470 620 Z" fill="url(#furGrad)" stroke="#3A1A08" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 570 494 C 614 474, 656 506, 656 550 C 640 528, 618 534, 606 518 C 592 536, 566 534, 556 554 C 526 546, 520 496, 570 494 Z" fill="url(#creamGrad)" opacity="0.92"/>
+    <path d="M 537 562 C 546 548, 562 546, 571 556" fill="none" stroke="#C07030" stroke-width="4" stroke-linecap="round" opacity="0.55"/>
   `),
   cuerpo: wrapSvg(`
-    <path d="M 295 440 C 265 510, 260 615, 295 660 C 330 695, 470 695, 505 660 C 540 615, 535 510, 505 440 Z" fill="url(#furGrad)" stroke="#4A2518" stroke-width="10" stroke-linejoin="round"/>
-    <path d="M 325 465 C 300 525, 305 625, 345 662 C 375 682, 425 682, 455 662 C 495 625, 500 525, 475 465 Z" fill="url(#creamGrad)"/>
+    <path d="M 288 452 C 248 524, 244 632, 288 674 C 328 708, 472 708, 512 674 C 556 632, 552 524, 512 452 Z" fill="url(#furGrad)" stroke="#3A1A08" stroke-width="10" stroke-linejoin="round"/>
+    <ellipse cx="400" cy="596" rx="95" ry="108" fill="url(#creamGrad)" opacity="0.96"/>
+    <path d="M 268 572 C 282 550, 318 556, 332 586" fill="none" stroke="#3A1A08" stroke-width="7.5" stroke-linecap="round"/>
+    <path d="M 532 572 C 518 550, 482 556, 468 586" fill="none" stroke="#3A1A08" stroke-width="7.5" stroke-linecap="round"/>
+    <ellipse cx="385" cy="548" rx="26" ry="19" fill="#FFFFFF" opacity="0.28"/>
   `),
   pata_izq: wrapSvg(`
-    <path d="M 272 605 C 242 612, 232 652, 255 678 C 278 700, 332 695, 345 675 C 355 655, 340 610, 305 605 Z" fill="url(#furGrad)" stroke="#4A2518" stroke-width="10" stroke-linejoin="round"/>
-    <ellipse cx="288" cy="655" rx="36" ry="34" transform="rotate(-18 288 655)" fill="url(#creamGrad)" stroke="#4A2518" stroke-width="9"/>
-    <ellipse cx="288" cy="665" rx="14" ry="12" transform="rotate(-15 288 665)" fill="#F4A59E"/>
+    <path d="M 264 614 C 230 624, 218 666, 245 692 C 270 714, 336 708, 350 684 C 362 660, 346 618, 306 610 Z" fill="url(#furGrad)" stroke="#3A1A08" stroke-width="10" stroke-linejoin="round"/>
+    <ellipse cx="280" cy="667" rx="42" ry="37" transform="rotate(-16 280 667)" fill="url(#creamGrad)" stroke="#3A1A08" stroke-width="7.5"/>
+    <ellipse cx="280" cy="676" rx="16" ry="14" transform="rotate(-12 280 676)" fill="#F2A09A"/>
+    <ellipse cx="256" cy="655" rx="7.5" ry="10" transform="rotate(-34 256 655)" fill="#F2A09A"/>
+    <ellipse cx="274" cy="644" rx="7.5" ry="10" transform="rotate(-12 274 644)" fill="#F2A09A"/>
+    <ellipse cx="296" cy="646" rx="7.5" ry="10" transform="rotate(10 296 646)" fill="#F2A09A"/>
   `),
   pata_der: wrapSvg(`
-    <path d="M 528 605 C 558 612, 568 652, 545 678 C 522 700, 468 695, 455 675 C 445 655, 460 610, 495 605 Z" fill="url(#furGrad)" stroke="#4A2518" stroke-width="10" stroke-linejoin="round"/>
-    <ellipse cx="512" cy="655" rx="36" ry="34" transform="rotate(18 512 655)" fill="url(#creamGrad)" stroke="#4A2518" stroke-width="9"/>
-    <ellipse cx="512" cy="665" rx="14" ry="12" transform="rotate(15 512 665)" fill="#F4A59E"/>
+    <path d="M 536 614 C 570 624, 582 666, 555 692 C 530 714, 464 708, 450 684 C 438 660, 454 618, 494 610 Z" fill="url(#furGrad)" stroke="#3A1A08" stroke-width="10" stroke-linejoin="round"/>
+    <ellipse cx="520" cy="667" rx="42" ry="37" transform="rotate(16 520 667)" fill="url(#creamGrad)" stroke="#3A1A08" stroke-width="7.5"/>
+    <ellipse cx="520" cy="676" rx="16" ry="14" transform="rotate(12 520 676)" fill="#F2A09A"/>
+    <ellipse cx="544" cy="655" rx="7.5" ry="10" transform="rotate(34 544 655)" fill="#F2A09A"/>
+    <ellipse cx="526" cy="644" rx="7.5" ry="10" transform="rotate(12 526 644)" fill="#F2A09A"/>
+    <ellipse cx="504" cy="646" rx="7.5" ry="10" transform="rotate(-10 504 646)" fill="#F2A09A"/>
   `),
   brazo_izq: wrapSvg(`
-    <path d="M 290 450 C 255 485, 258 555, 295 578 C 325 595, 360 580, 365 552 C 368 525, 342 505, 322 495 C 312 480, 310 460, 290 450 Z" fill="url(#furGrad)" stroke="#4A2518" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M 322 584 C 348 588, 364 570, 365 550 C 365 530, 348 515, 330 515 C 312 528, 308 562, 322 584 Z" fill="url(#creamGrad)"/>
+    <path d="M 276 458 C 238 496, 240 572, 282 598 C 316 616, 360 600, 366 568 C 370 538, 340 516, 318 504 C 306 488, 302 468, 276 458 Z" fill="url(#furGrad)" stroke="#3A1A08" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+    <ellipse cx="320" cy="600" rx="36" ry="32" fill="url(#creamGrad)" stroke="#3A1A08" stroke-width="7"/>
+    <ellipse cx="320" cy="608" rx="14" ry="12" fill="#F2A09A"/>
+    <path d="M 354 550 C 342 554, 336 558, 330 565" fill="none" stroke="#3A1A08" stroke-width="5" stroke-linecap="round"/>
+    <path d="M 350 570 C 338 574, 332 577, 326 582" fill="none" stroke="#3A1A08" stroke-width="5" stroke-linecap="round"/>
   `),
-  // BRAZO DERECHO NORMAL (Descansando en la panza)
   brazo_der_normal: wrapSvg(`
-    <path d="M 510 450 C 545 485, 542 555, 505 578 C 475 595, 440 580, 435 552 C 432 525, 458 505, 478 495 C 488 480, 490 460, 510 450 Z" fill="url(#furGrad)" stroke="#4A2518" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M 478 584 C 452 588, 436 570, 435 550 C 435 530, 452 515, 470 515 C 488 528, 492 562, 478 584 Z" fill="url(#creamGrad)"/>
+    <path d="M 524 458 C 562 496, 560 572, 518 598 C 484 616, 440 600, 434 568 C 430 538, 460 516, 482 504 C 494 488, 498 468, 524 458 Z" fill="url(#furGrad)" stroke="#3A1A08" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+    <ellipse cx="480" cy="600" rx="36" ry="32" fill="url(#creamGrad)" stroke="#3A1A08" stroke-width="7"/>
+    <ellipse cx="480" cy="608" rx="14" ry="12" fill="#F2A09A"/>
+    <path d="M 446 550 C 458 554, 464 558, 470 565" fill="none" stroke="#3A1A08" stroke-width="5" stroke-linecap="round"/>
+    <path d="M 450 570 C 462 574, 468 577, 474 582" fill="none" stroke="#3A1A08" stroke-width="5" stroke-linecap="round"/>
   `),
-  // BRAZO DERECHO LEVANTADO CON MANO ABIIERTA (Para Saludar)
   brazo_der_saludo: wrapSvg(`
-    <path d="M 510 450 C 560 420, 580 320, 540 280 C 520 260, 480 280, 490 320 C 510 380, 480 430, 510 450 Z" fill="url(#furGrad)" stroke="#4A2518" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
-    <!-- Mano abierta con deditos y huellitas hacia el frente -->
-    <ellipse cx="545" cy="270" rx="24" ry="20" fill="url(#creamGrad)" stroke="#4A2518" stroke-width="8"/>
-    <circle cx="530" cy="255" rx="6" fill="#F4A59E" stroke="#4A2518" stroke-width="4"/>
-    <circle cx="545" cy="250" rx="6" fill="#F4A59E" stroke="#4A2518" stroke-width="4"/>
-    <circle cx="560" cy="255" rx="6" fill="#F4A59E" stroke="#4A2518" stroke-width="4"/>
+    <path d="M 524 462 C 574 430, 600 322, 556 278 C 534 255, 490 274, 498 320 C 512 372, 492 432, 524 462 Z" fill="url(#furGrad)" stroke="#3A1A08" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+    <ellipse cx="558" cy="268" rx="32" ry="28" fill="url(#creamGrad)" stroke="#3A1A08" stroke-width="8"/>
+    <circle cx="538" cy="249" r="9" fill="#F2A09A" stroke="#3A1A08" stroke-width="4"/>
+    <circle cx="558" cy="242" r="9" fill="#F2A09A" stroke="#3A1A08" stroke-width="4"/>
+    <circle cx="578" cy="249" r="9" fill="#F2A09A" stroke="#3A1A08" stroke-width="4"/>
+    <ellipse cx="558" cy="268" rx="15" ry="11" fill="#F2A09A" opacity="0.55"/>
   `),
   bufanda_ext: wrapSvg(`
-    <path d="M 515 415 C 545 395, 575 365, 595 345 C 612 365, 622 390, 625 415 C 590 435, 550 448, 512 442 Z" fill="url(#scarfGrad)" stroke="#4A2518" stroke-width="10" stroke-linejoin="round"/>
+    <path d="M 512 422 C 546 398, 578 366, 600 344 C 620 368, 632 396, 634 424 C 598 446, 556 460, 510 452 Z" fill="url(#scarfGrad)" stroke="#3A1A08" stroke-width="10" stroke-linejoin="round"/>
+    <path d="M 573 368 C 590 390, 600 415, 603 438" fill="none" stroke="#88DDAA" stroke-width="5" stroke-linecap="round" opacity="0.65"/>
   `),
   bufanda_cuello: wrapSvg(`
-    <path d="M 272 395 C 258 425, 262 465, 290 478 C 350 508, 450 508, 510 478 C 538 465, 542 425, 528 395 C 465 425, 335 425, 272 395 Z" fill="url(#scarfGrad)" stroke="#4A2518" stroke-width="10" stroke-linejoin="round"/>
+    <path d="M 265 404 C 248 438, 252 480, 284 494 C 348 526, 452 526, 516 494 C 548 480, 552 438, 535 404 C 470 436, 330 436, 265 404 Z" fill="url(#scarfGrad)" stroke="#3A1A08" stroke-width="10" stroke-linejoin="round"/>
+    <path d="M 268 404 C 264 430, 278 454, 324 466 C 388 482, 454 476, 528 448 C 542 434, 542 416, 533 404 C 468 436, 332 436, 268 404 Z" fill="#5DD496" stroke="#3A1A08" stroke-width="7.5" stroke-linejoin="round"/>
+    <path d="M 272 437 C 332 476, 456 472, 528 448" fill="none" stroke="#3A1A08" stroke-width="6.5" stroke-linecap="round"/>
   `),
   cabeza: wrapSvg(`
-    <path d="M 400 205 C 425 205, 445 212, 458 218 C 475 182, 502 155, 518 162 C 535 168, 548 225, 538 282 C 555 308, 562 332, 572 342 L 555 352 C 565 368, 568 382, 552 398 C 522 428, 465 442, 400 442 C 335 442, 278 428, 248 398 C 232 382, 235 368, 245 352 L 228 342 C 238 332, 245 308, 262 282 C 252 225, 265 168, 282 162 C 298 155, 325 182, 342 218 C 355 212, 375 205, 400 205 Z" fill="url(#furGrad)" stroke="#4A2518" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M 282 262 C 276 225, 284 190, 294 188 C 304 186, 322 212, 330 232 C 312 240, 295 250, 282 262 Z" fill="#F4A59E"/>
-    <path d="M 518 262 C 524 225, 516 190, 506 188 C 496 186, 478 212, 470 232 C 488 240, 505 250, 518 262 Z" fill="#F4A59E"/>
-    <path d="M 255 375 C 262 342, 305 332, 345 348 C 368 358, 382 332, 400 332 C 418 332, 432 358, 455 348 C 495 332, 538 342, 545 375 C 550 405, 495 436, 400 436 C 305 436, 250 405, 255 375 Z" fill="url(#creamGrad)"/>
+    <ellipse cx="400" cy="446" rx="170" ry="18" fill="#3A1A08" opacity="0.07"/>
+    <path d="M 400 142 C 420 142, 442 148, 460 158 C 480 118, 512 88, 532 96 C 552 104, 566 170, 554 236 C 576 268, 586 300, 598 314 L 576 326 C 590 348, 592 370, 574 392 C 538 430, 474 450, 400 450 C 326 450, 262 430, 226 392 C 208 370, 210 348, 224 326 L 202 314 C 214 300, 224 268, 246 236 C 234 170, 248 104, 268 96 C 288 88, 320 118, 340 158 C 358 148, 380 142, 400 142 Z" fill="url(#furGrad)" stroke="#3A1A08" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 246 228 C 238 184, 248 140, 262 138 C 276 136, 298 168, 308 196 C 287 208, 265 218, 246 228 Z" fill="#F2A09A"/>
+    <path d="M 554 228 C 562 184, 552 140, 538 138 C 524 136, 502 168, 492 196 C 513 208, 535 218, 554 228 Z" fill="#F2A09A"/>
+    <path d="M 230 380 C 238 340, 292 324, 342 346 C 368 358, 384 326, 400 326 C 416 326, 432 358, 458 346 C 508 324, 562 340, 570 380 C 576 416, 512 450, 400 450 C 288 450, 224 416, 230 380 Z" fill="url(#creamGrad)"/>
+    <ellipse cx="352" cy="178" rx="23" ry="44" transform="rotate(18 352 178)" fill="#FFFFFF" opacity="0.42"/>
+    <ellipse cx="364" cy="168" rx="8" ry="20" transform="rotate(18 364 168)" fill="#FFFFFF" opacity="0.3"/>
   `),
-  // EXPRESIONES FACIALES
-  face_sonreir: wrapSvg(`
-    <ellipse cx="298" cy="366" rx="28" ry="16" fill="#FF8B82" opacity="0.85"/>
-    <ellipse cx="502" cy="366" rx="28" ry="16" fill="#FF8B82" opacity="0.85"/>
-    <path d="M 322 342 C 330 318, 358 318, 366 342" fill="none" stroke="#4A2518" stroke-width="12" stroke-linecap="round"/>
-    <path d="M 434 342 C 442 318, 470 318, 478 342" fill="none" stroke="#4A2518" stroke-width="12" stroke-linecap="round"/>
-    <path d="M 384 356 C 384 348, 416 348, 416 356 C 416 366, 406 374, 400 374 C 394 374, 384 366, 384 356 Z" fill="#4A2518"/>
-    <path d="M 366 382 C 374 398, 394 398, 400 382 C 406 398, 426 398, 434 382" fill="none" stroke="#4A2518" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
-  `),
-  face_ojos: wrapSvg(`
-    <ellipse cx="298" cy="368" rx="28" ry="16" fill="#FF8B82" opacity="0.85"/>
-    <ellipse cx="502" cy="368" rx="28" ry="16" fill="#FF8B82" opacity="0.85"/>
-    <ellipse cx="344" cy="332" rx="20" ry="22" fill="#4A2518"/>
-    <circle cx="336" cy="323" r="7.5" fill="#FFFFFF"/>
-    <ellipse cx="456" cy="332" rx="20" ry="22" fill="#4A2518"/>
-    <circle cx="448" cy="323" r="7.5" fill="#FFFFFF"/>
-    <path d="M 384 356 C 384 348, 416 348, 416 356 C 416 366, 406 374, 400 374 C 394 374, 384 366, 384 356 Z" fill="#4A2518"/>
-    <path d="M 366 382 C 374 398, 394 398, 400 382 C 406 398, 426 398, 434 382" fill="none" stroke="#4A2518" stroke-width="9" stroke-linecap="round"/>
-  `),
-  face_comer: wrapSvg(`
-    <ellipse cx="298" cy="368" rx="28" ry="16" fill="#FF8B82" opacity="0.85"/>
-    <ellipse cx="502" cy="368" rx="28" ry="16" fill="#FF8B82" opacity="0.85"/>
-    <!-- Ojos felices cerrados -->
-    <path d="M 322 342 C 330 320, 358 320, 366 342" fill="none" stroke="#4A2518" stroke-width="12" stroke-linecap="round"/>
-    <path d="M 434 342 C 442 320, 470 320, 478 342" fill="none" stroke="#4A2518" stroke-width="12" stroke-linecap="round"/>
-    <path d="M 384 356 C 384 348, 416 348, 416 356 C 416 366, 406 374, 400 374 C 394 374, 384 366, 384 356 Z" fill="#4A2518"/>
-    <!-- Boquita feliz masticando con manzanita -->
-    <ellipse cx="400" cy="395" rx="22" ry="20" fill="#8C2D2D" stroke="#4A2518" stroke-width="7"/>
-    <circle cx="400" cy="392" r="8" fill="#FF4D4D"/>
-  `),
-  face_llorar: wrapSvg(`
-    <ellipse cx="298" cy="372" rx="28" ry="15" fill="#FF8B82" opacity="0.6"/>
-    <ellipse cx="502" cy="372" rx="28" ry="15" fill="#FF8B82" opacity="0.6"/>
-    <ellipse cx="344" cy="338" rx="21" ry="22" fill="#4A2518"/>
-    <circle cx="336" cy="329" r="8" fill="#FFFFFF"/>
-    <ellipse cx="456" cy="338" rx="21" ry="22" fill="#4A2518"/>
-    <circle cx="448" cy="329" r="8" fill="#FFFFFF"/>
-    <path d="M 326 355 C 314 378, 314 405, 326 410 C 338 405, 338 378, 326 355 Z" fill="#6EC6FF" stroke="#4A2518" stroke-width="5"/>
-    <path d="M 474 355 C 462 378, 462 405, 474 410 C 486 405, 486 378, 474 355 Z" fill="#6EC6FF" stroke="#4A2518" stroke-width="5"/>
-    <path d="M 385 358 C 385 350, 415 350, 415 358 C 415 367, 405 374, 400 374 C 395 374, 385 367, 385 358 Z" fill="#4A2518"/>
-    <path d="M 374 398 Q 400 378 426 398" fill="none" stroke="#4A2518" stroke-width="9" stroke-linecap="round"/>
-  `),
-  face_alegre: wrapSvg(`
-    <ellipse cx="295" cy="365" rx="32" ry="18" fill="#FF6B6B" opacity="0.95"/>
-    <ellipse cx="505" cy="365" rx="32" ry="18" fill="#FF6B6B" opacity="0.95"/>
-    <path d="M 318 338 C 328 305, 360 305, 370 338" fill="none" stroke="#4A2518" stroke-width="13" stroke-linecap="round"/>
-    <path d="M 430 338 C 440 305, 472 305, 482 338" fill="none" stroke="#4A2518" stroke-width="13" stroke-linecap="round"/>
-    <path d="M 384 352 C 384 344, 416 344, 416 352 C 416 362, 406 370, 400 370 C 394 370, 384 362, 384 352 Z" fill="#4A2518"/>
-    <path d="M 362 376 L 438 376 C 438 412, 418 424, 400 424 C 382 424, 362 412, 362 376 Z" fill="#9E3333" stroke="#4A2518" stroke-width="8" stroke-linejoin="round"/>
-  `),
+  face_sonreir: wrapSvg(`${CHEEKS}${EYES_N}${NOSE}${SMILE}${BROW_H}`),
+  face_ojos:    wrapSvg(`${CHEEKS}${EYES_N}${NOSE}${SMILE}<path d="M 288 252 C 302 243, 332 244, 348 253" fill="none" stroke="#3A1A08" stroke-width="7" stroke-linecap="round"/><path d="M 452 253 C 468 244, 498 243, 512 252" fill="none" stroke="#3A1A08" stroke-width="7" stroke-linecap="round"/>`),
+  face_comer:   wrapSvg(`${CHEEKS}${EYES_H}${NOSE}<ellipse cx="400" cy="396" rx="28" ry="24" fill="#8C2828" stroke="#3A1A08" stroke-width="7"/><ellipse cx="400" cy="390" rx="12" ry="10" fill="#FF5050" opacity="0.9"/>${BROW_H}`),
+  face_llorar:  wrapSvg(`<ellipse cx="262" cy="360" rx="40" ry="26" fill="url(#cheekGrad)" opacity="0.38"/><ellipse cx="538" cy="360" rx="40" ry="26" fill="url(#cheekGrad)" opacity="0.38"/>${EYES_S}${NOSE}${SADMTH}<path d="M 298 338 C 284 368, 282 402, 298 410 C 314 402, 314 368, 298 338 Z" fill="#6EC6FF" stroke="#3A1A08" stroke-width="4"/><path d="M 502 338 C 488 368, 486 402, 502 410 C 518 402, 518 368, 502 338 Z" fill="#6EC6FF" stroke="#3A1A08" stroke-width="4"/>${BROW_S}`),
+  face_alegre:  wrapSvg(`${BIGCHK}${EYES_H}${NOSE}${BIGMTH}${BROW_H}`),
 };
 
 const EMOTION_BUTTONS = [
-  { key: 'saludar', label: '👋 Saludar (Mano)' },
-  { key: 'comer', label: '🍎 Comer Manzana' },
-  { key: 'moverCola', label: '🐕 Mover Cola' },
-  { key: 'sonreir', label: '😊 Sonreír' },
-  { key: 'llorar', label: '😢 Triste' },
-  { key: 'superAlegre', label: '🤩 Súper Alegre' },
+  { key: "saludar",    label: "Saludar" },
+  { key: "comer",      label: "Comer" },
+  { key: "moverCola",  label: "Mover Cola" },
+  { key: "sonreir",    label: "Sonreir" },
+  { key: "llorar",     label: "Triste" },
+  { key: "superAlegre",label: "Super Alegre" },
 ];
 
 export default function App() {
-  const [expenses, setExpenses] = useState([]);
-  const [desc, setDesc] = useState('');
-  const [amount, setAmount] = useState('');
-  const [currentAnim, setCurrentAnim] = useState('sonreir');
-  const [statusMessage, setStatusMessage] = useState('🥚 ¡Huevo Etapa 0! Registra tus primeros 3 gastos para eclosionar tu mascota.');
+  const [expenses, setExpenses]           = useState([]);
+  const [desc, setDesc]                   = useState("");
+  const [amount, setAmount]               = useState("");
+  const [currentAnim, setCurrentAnim]     = useState("sonreir");
+  const [statusMessage, setStatusMessage] = useState("Huevo Etapa 0! Registra tus primeros 3 gastos para eclosionar tu mascota.");
 
-  const animTick = useRef(new Animated.Value(0)).current;
+  const tailAnim   = useRef(new Animated.Value(0)).current;
+  const headAnim   = useRef(new Animated.Value(0)).current;
+  const breathAnim = useRef(new Animated.Value(0)).current;
+  const armAnim    = useRef(new Animated.Value(0)).current;
+  const eggAnim    = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    animTick.setValue(0);
-    const speed = currentAnim === 'superAlegre' || currentAnim === 'moverCola' ? 320 : 700;
+    [tailAnim, headAnim, breathAnim, armAnim].forEach(v => v.setValue(0));
+    const isSuperHappy = currentAnim === "superAlegre";
+    const isWag        = currentAnim === "moverCola";
+    const isWave       = currentAnim === "saludar";
+    const tS = (isSuperHappy || isWag) ? 190 : 580;
+    const hS = isSuperHappy ? 360 : 880;
+    const bS = isSuperHappy ? 400 : 1050;
+    const aS = isWave ? 260 : 720;
 
-    const loop = Animated.loop(
-      Animated.sequence([
-        Animated.timing(animTick, { toValue: 1, duration: speed, easing: Easing.inOut(Easing.sin), useNativeDriver: true }),
-        Animated.timing(animTick, { toValue: -1, duration: speed, easing: Easing.inOut(Easing.sin), useNativeDriver: true }),
-        Animated.timing(animTick, { toValue: 0, duration: speed, easing: Easing.inOut(Easing.sin), useNativeDriver: true }),
-      ])
-    );
-    loop.start();
-    return () => loop.stop();
+    const tl = Animated.loop(Animated.sequence([
+      Animated.timing(tailAnim, { toValue: 1,  duration: tS,        easing: Easing.out(Easing.sin),   useNativeDriver: true }),
+      Animated.timing(tailAnim, { toValue: -1, duration: tS,        easing: Easing.inOut(Easing.sin), useNativeDriver: true }),
+      Animated.timing(tailAnim, { toValue: 0,  duration: tS * 0.45, easing: Easing.in(Easing.sin),    useNativeDriver: true }),
+    ]));
+    const hl = Animated.loop(Animated.sequence([
+      Animated.timing(headAnim, { toValue: 1,  duration: hS,        easing: Easing.inOut(Easing.quad), useNativeDriver: true }),
+      Animated.timing(headAnim, { toValue: -1, duration: hS,        easing: Easing.inOut(Easing.quad), useNativeDriver: true }),
+      Animated.timing(headAnim, { toValue: 0,  duration: hS * 0.55, easing: Easing.inOut(Easing.sin),  useNativeDriver: true }),
+    ]));
+    const bl = Animated.loop(Animated.sequence([
+      Animated.timing(breathAnim, { toValue: 1, duration: bS,        easing: Easing.inOut(Easing.sin), useNativeDriver: true }),
+      Animated.timing(breathAnim, { toValue: 0, duration: bS * 1.25, easing: Easing.inOut(Easing.sin), useNativeDriver: true }),
+    ]));
+    const al = Animated.loop(Animated.sequence([
+      Animated.timing(armAnim, { toValue: 1, duration: aS, easing: isWave ? Easing.out(Easing.back(2)) : Easing.inOut(Easing.sin), useNativeDriver: true }),
+      Animated.timing(armAnim, { toValue: 0, duration: aS, easing: Easing.in(Easing.sin), useNativeDriver: true }),
+    ]));
+    [tl, hl, bl, al].forEach(l => l.start());
+    return () => [tl, hl, bl, al].forEach(l => l.stop());
   }, [currentAnim]);
 
-  const count = expenses.length;
+  useEffect(() => {
+    eggAnim.setValue(0);
+    const active = expenses.length > 0 && expenses.length < 3;
+    const spd    = active ? 320 : 880;
+    const loop   = Animated.loop(Animated.sequence([
+      Animated.timing(eggAnim, { toValue: 1,  duration: spd,        easing: Easing.inOut(Easing.sin), useNativeDriver: true }),
+      Animated.timing(eggAnim, { toValue: -1, duration: spd,        easing: Easing.inOut(Easing.sin), useNativeDriver: true }),
+      Animated.timing(eggAnim, { toValue: 0,  duration: spd * 0.45, easing: Easing.inOut(Easing.sin), useNativeDriver: true }),
+    ]));
+    loop.start();
+    return () => loop.stop();
+  }, [expenses.length]);
+
+  const count     = expenses.length;
   const isHatched = count >= 3;
 
   const handleAddExpense = () => {
     const numAmount = parseFloat(amount);
     if (!desc.trim() || isNaN(numAmount) || numAmount <= 0) return;
-
     const newExpenses = [{ id: Date.now().toString(), desc, amount: numAmount }, ...expenses];
     setExpenses(newExpenses);
-    setDesc('');
-    setAmount('');
-
-    const newCount = newExpenses.length;
-    if (newCount === 1) {
-      setCurrentAnim('sonreir');
-      setStatusMessage('🥚 ¡Huevo Etapa 1! Apareció una grieta. Faltan 2 gastos.');
-    } else if (newCount === 2) {
-      setCurrentAnim('sonreir');
-      setStatusMessage('🥚 ¡Huevo Etapa 2! A punto de romperse. ¡1 gasto más!');
-    } else if (newCount === 3) {
-      setCurrentAnim('comer');
-      setStatusMessage('🎉 ¡ECLOSIÓN! ¡Tu Bebé Shiba Inu ha nacido y come su manzana dorada!');
-    } else {
-      setCurrentAnim('superAlegre');
-      setStatusMessage('✨ ¡Gasto registrado! Tu mascota bebé celebra con alegría.');
-    }
+    setDesc(""); setAmount("");
+    const n = newExpenses.length;
+    if      (n === 1) { setCurrentAnim("sonreir");    setStatusMessage("Huevo Etapa 1! Aparecio una grieta. Faltan 2 gastos."); }
+    else if (n === 2) { setCurrentAnim("sonreir");    setStatusMessage("Huevo Etapa 2! A punto de romperse. 1 gasto mas!"); }
+    else if (n === 3) { setCurrentAnim("comer");      setStatusMessage("ECLOSION! Tu Bebe Shiba Inu ha nacido y come su manzana dorada!"); }
+    else              { setCurrentAnim("superAlegre");setStatusMessage("Gasto registrado! Tu mascota bebe celebra con alegria."); }
   };
 
   const handleResetEgg = () => {
-    setExpenses([]);
-    setCurrentAnim('sonreir');
-    setStatusMessage('🥚 ¡Huevo reiniciado (Etapa 0)! Registra 3 gastos para que nazca tu mascota.');
+    setExpenses([]); setCurrentAnim("sonreir");
+    setStatusMessage("Huevo reiniciado! Registra 3 gastos para que nazca tu mascota.");
   };
 
   const getEggSvg = () => {
     if (count === 1) return SVGS.egg_phase1;
     if (count === 2) return SVGS.egg_phase2;
-    if (count >= 3) return SVGS.egg_phase3;
+    if (count >= 3)  return SVGS.egg_phase3;
     return SVGS.egg_phase0;
   };
-
   const getFaceSvg = () => {
     switch (currentAnim) {
-      case 'saludar':
-      case 'abrirOjos': return SVGS.face_ojos;
-      case 'comer': return SVGS.face_comer;
-      case 'llorar': return SVGS.face_llorar;
-      case 'superAlegre': return SVGS.face_alegre;
-      default: return SVGS.face_sonreir;
+      case "saludar": case "abrirOjos": return SVGS.face_ojos;
+      case "comer":        return SVGS.face_comer;
+      case "llorar":       return SVGS.face_llorar;
+      case "superAlegre":  return SVGS.face_alegre;
+      default:             return SVGS.face_sonreir;
     }
   };
 
-  // ANIMACIONES INTERPOLADAS
-  const jumpY = animTick.interpolate({
-    inputRange: [-1, 0, 1],
-    outputRange: currentAnim === 'superAlegre' ? [0, -20, 0] : [0, -4, 0]
-  });
-  const headRotate = animTick.interpolate({
-    inputRange: [-1, 1],
-    outputRange: currentAnim === 'llorar' ? ['-4deg', '4deg'] : ['-6deg', '6deg']
-  });
-  const tailRotate = animTick.interpolate({
-    inputRange: [-1, 1],
-    outputRange: currentAnim === 'moverCola' || currentAnim === 'superAlegre' ? ['-25deg', '25deg'] : ['-8deg', '8deg']
-  });
-  const rightArmRotate = animTick.interpolate({
-    inputRange: [-1, 1],
-    outputRange: currentAnim === 'saludar' ? ['-15deg', '15deg'] : ['-3deg', '3deg']
-  });
-  const leftArmRotate = animTick.interpolate({
-    inputRange: [-1, 1],
-    outputRange: ['3deg', '-3deg']
-  });
-  const eggRotate = animTick.interpolate({
-    inputRange: [-1, 1],
-    outputRange: count > 0 ? ['-12deg', '12deg'] : ['-3deg', '3deg']
-  });
+  const isSH = currentAnim === "superAlegre";
+  const isW  = currentAnim === "moverCola";
+  const isWv = currentAnim === "saludar";
+  const jumpY     = breathAnim.interpolate({ inputRange: [0,1], outputRange: [0, isSH ? -20 : -6] });
+  const scaleY    = breathAnim.interpolate({ inputRange: [0,1], outputRange: [1, isSH ? 1.045 : 1.02] });
+  const headR     = headAnim.interpolate({ inputRange: [-1,0,1], outputRange: ["-6deg","0deg","6deg"] });
+  const tailR     = tailAnim.interpolate({ inputRange: [-1,0,1], outputRange: (isW||isSH) ? ["-30deg","0deg","30deg"] : ["-10deg","0deg","10deg"] });
+  const leftAR    = armAnim.interpolate({ inputRange: [0,1], outputRange: ["0deg","-9deg"] });
+  const rightAR   = armAnim.interpolate({ inputRange: [0,1], outputRange: ["0deg", isWv ? "20deg" : "9deg"] });
+  const eggR      = eggAnim.interpolate({ inputRange: [-1,0,1], outputRange: count>0 ? ["-15deg","0deg","15deg"] : ["-4deg","0deg","4deg"] });
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
-        <ScrollView contentContainerStyle={styles.container}>
-          <Text style={styles.title}>MetaFin</Text>
-          <Text style={styles.subtitle}>Tamagotchi Financial Companion</Text>
-
-          <View style={styles.progressCard}>
-            <Text style={styles.progressText}>
-              {isHatched
-                ? `🐕 Mascota Bebé Activa • ${expenses.length} gastos registrados`
-                : `🥚 Progreso de Eclosión: ${expenses.length} / 3 gastos`}
-            </Text>
-            <View style={styles.progressBarBg}>
-              <View style={[styles.progressBarFill, { width: `${Math.min((expenses.length / 3) * 100, 100)}%` }]} />
-            </View>
+    <SafeAreaView style={s.safe}>
+      <KeyboardAvoidingView behavior={Platform.OS==="ios"?"padding":"height"} style={{flex:1}}>
+        <ScrollView contentContainerStyle={s.container}>
+          <Text style={s.title}>MetaFin</Text>
+          <Text style={s.sub}>Tamagotchi Financial Companion</Text>
+          <View style={s.progCard}>
+            <Text style={s.progTxt}>{isHatched ? `Mascota Activa - ${expenses.length} gastos` : `Eclosion: ${expenses.length} / 3`}</Text>
+            <View style={s.progBg}><View style={[s.progFill, {width:`${Math.min((expenses.length/3)*100,100)}%`}]}/></View>
           </View>
-
-          {/* ESCENARIO DE LA MASCOTA / HUEVO */}
-          <View style={styles.mascotStage}>
-            <View style={styles.canvasBox}>
-              <View style={styles.layer}>
-                <SvgXml xml={SVGS.sombra} width={STAGE_SIZE} height={STAGE_SIZE} />
-              </View>
-
+          <View style={s.stage}>
+            <View style={s.canvas}>
+              <View style={s.layer}><SvgXml xml={SVGS.sombra} width={STAGE_SIZE} height={STAGE_SIZE}/></View>
               {!isHatched ? (
-                <Animated.View style={[styles.layer, { transform: [{ rotate: eggRotate }, { translateY: jumpY }] }]}>
-                  <View style={styles.layer}>
-                    <SvgXml xml={getEggSvg()} width={STAGE_SIZE} height={STAGE_SIZE} />
-                  </View>
+                <Animated.View style={[s.layer,{transform:[{rotate:eggR},{translateY:jumpY}]}]}>
+                  <View style={s.layer}><SvgXml xml={getEggSvg()} width={STAGE_SIZE} height={STAGE_SIZE}/></View>
                 </Animated.View>
               ) : (
-                <Animated.View style={[styles.layer, { transform: [{ translateY: jumpY }] }]}>
-                  {/* Cola */}
-                  <Animated.View style={[styles.layer, { transform: [{ rotate: tailRotate }] }]}>
-                    <SvgXml xml={SVGS.cola} width={STAGE_SIZE} height={STAGE_SIZE} />
+                <Animated.View style={[s.layer,{transform:[{translateY:jumpY}]}]}>
+                  <Animated.View style={[s.layer,{transform:[{translateX:90},{translateY:78},{rotate:tailR},{translateX:-90},{translateY:-78}]}]}>
+                    <SvgXml xml={SVGS.cola} width={STAGE_SIZE} height={STAGE_SIZE}/>
                   </Animated.View>
-
-                  {/* Cuerpo */}
-                  <View style={styles.layer}>
-                    <SvgXml xml={SVGS.cuerpo} width={STAGE_SIZE} height={STAGE_SIZE} />
-                  </View>
-
-                  {/* Patas */}
-                  <View style={styles.layer}>
-                    <SvgXml xml={SVGS.pata_izq} width={STAGE_SIZE} height={STAGE_SIZE} />
-                  </View>
-                  <View style={styles.layer}>
-                    <SvgXml xml={SVGS.pata_der} width={STAGE_SIZE} height={STAGE_SIZE} />
-                  </View>
-
-                  {/* Brazos izquierdo y derecho (Cambia a brazo con mano abierta si es Saludar) */}
-                  <Animated.View style={[styles.layer, { transform: [{ rotate: leftArmRotate }] }]}>
-                    <SvgXml xml={SVGS.brazo_izq} width={STAGE_SIZE} height={STAGE_SIZE} />
+                  <Animated.View style={[s.layer,{transform:[{scaleY:scaleY}]}]}>
+                    <SvgXml xml={SVGS.cuerpo} width={STAGE_SIZE} height={STAGE_SIZE}/>
                   </Animated.View>
-                  <Animated.View style={[styles.layer, { transform: [{ rotate: rightArmRotate }] }]}>
-                    <SvgXml
-                      xml={currentAnim === 'saludar' ? SVGS.brazo_der_saludo : SVGS.brazo_der_normal}
-                      width={STAGE_SIZE}
-                      height={STAGE_SIZE}
-                    />
+                  <View style={s.layer}><SvgXml xml={SVGS.pata_izq} width={STAGE_SIZE} height={STAGE_SIZE}/></View>
+                  <View style={s.layer}><SvgXml xml={SVGS.pata_der} width={STAGE_SIZE} height={STAGE_SIZE}/></View>
+                  <Animated.View style={[s.layer,{transform:[{translateX:-102},{translateY:64},{rotate:leftAR},{translateX:102},{translateY:-64}]}]}>
+                    <SvgXml xml={SVGS.brazo_izq} width={STAGE_SIZE} height={STAGE_SIZE}/>
                   </Animated.View>
-
-                  {/* Bufanda */}
-                  <View style={styles.layer}>
-                    <SvgXml xml={SVGS.bufanda_ext} width={STAGE_SIZE} height={STAGE_SIZE} />
-                  </View>
-                  <View style={styles.layer}>
-                    <SvgXml xml={SVGS.bufanda_cuello} width={STAGE_SIZE} height={STAGE_SIZE} />
-                  </View>
-
-                  {/* Cabeza y Expresión */}
-                  <Animated.View style={[styles.layer, { transform: [{ rotate: headRotate }] }]}>
-                    <View style={styles.layer}>
-                      <SvgXml xml={SVGS.cabeza} width={STAGE_SIZE} height={STAGE_SIZE} />
-                    </View>
-                    <View style={styles.layer}>
-                      <SvgXml xml={getFaceSvg()} width={STAGE_SIZE} height={STAGE_SIZE} />
-                    </View>
+                  <Animated.View style={[s.layer,{transform:[{translateX:102},{translateY:64},{rotate:rightAR},{translateX:-102},{translateY:-64}]}]}>
+                    <SvgXml xml={isWv ? SVGS.brazo_der_saludo : SVGS.brazo_der_normal} width={STAGE_SIZE} height={STAGE_SIZE}/>
+                  </Animated.View>
+                  <View style={s.layer}><SvgXml xml={SVGS.bufanda_ext}    width={STAGE_SIZE} height={STAGE_SIZE}/></View>
+                  <View style={s.layer}><SvgXml xml={SVGS.bufanda_cuello} width={STAGE_SIZE} height={STAGE_SIZE}/></View>
+                  <Animated.View style={[s.layer,{transform:[{translateY:56},{rotate:headR},{translateY:-56}]}]}>
+                    <View style={s.layer}><SvgXml xml={SVGS.cabeza}    width={STAGE_SIZE} height={STAGE_SIZE}/></View>
+                    <View style={s.layer}><SvgXml xml={getFaceSvg()}   width={STAGE_SIZE} height={STAGE_SIZE}/></View>
                   </Animated.View>
                 </Animated.View>
               )}
             </View>
-            <Text style={styles.statusBubble}>{statusMessage}</Text>
+            <Text style={s.status}>{statusMessage}</Text>
           </View>
-
-          {/* TAZONES DE COMIDA / CATEGORÍAS (RADAR DE CUENTAS) */}
-          <View style={styles.sectionCard}>
-            <Text style={styles.sectionTitle}>🥣 Tazones de Alimento por Categoría</Text>
-            <View style={styles.bowlsRow}>
-              <View style={styles.bowlItem}><Text style={styles.bowlEmoji}>🍗</Text><Text style={styles.bowlText}>Comidas</Text></View>
-              <View style={styles.bowlItem}><Text style={styles.bowlEmoji}>🚌</Text><Text style={styles.bowlText}>Pasajes</Text></View>
-              <View style={styles.bowlItem}><Text style={styles.bowlEmoji}>🎟️</Text><Text style={styles.bowlText}>Diversión</Text></View>
-              <View style={styles.bowlItem}><Text style={styles.bowlEmoji}>🧪</Text><Text style={styles.bowlText}>Salud</Text></View>
+          <View style={s.card}>
+            <Text style={s.cardTitle}>Tazones de Alimento</Text>
+            <View style={s.bowls}>
+              <View style={s.bowl}><Text style={s.bowlE}>&#x1F357;</Text><Text style={s.bowlT}>Comidas</Text></View>
+              <View style={s.bowl}><Text style={s.bowlE}>&#x1F68C;</Text><Text style={s.bowlT}>Pasajes</Text></View>
+              <View style={s.bowl}><Text style={s.bowlE}>&#x1F39F;&#xFE0F;</Text><Text style={s.bowlT}>Diversion</Text></View>
+              <View style={s.bowl}><Text style={s.bowlE}>&#x1F9EA;</Text><Text style={s.bowlT}>Salud</Text></View>
             </View>
           </View>
-
-          {/* BOTONES DE ACCIONES */}
-          <View style={styles.sectionCard}>
-            <Text style={styles.sectionTitle}>🎬 Acciones del Bebé Shiba:</Text>
-            <View style={styles.buttonGrid}>
-              {EMOTION_BUTTONS.map((btn) => (
-                <TouchableOpacity
-                  key={btn.key}
-                  style={[styles.animBtn, currentAnim === btn.key && styles.animBtnActive]}
-                  onPress={() => {
-                    setCurrentAnim(btn.key);
-                    setStatusMessage(`¡Acción: ${btn.label}!`);
-                  }}
-                >
-                  <Text style={[styles.animBtnText, currentAnim === btn.key && styles.animBtnTextActive]}>
-                    {btn.label}
-                  </Text>
+          <View style={s.card}>
+            <Text style={s.cardTitle}>Acciones del Bebe Shiba:</Text>
+            <View style={s.btnGrid}>
+              {EMOTION_BUTTONS.map(btn => (
+                <TouchableOpacity key={btn.key} style={[s.btn, currentAnim===btn.key&&s.btnA]}
+                  onPress={()=>{setCurrentAnim(btn.key);setStatusMessage("Accion: "+btn.label);}}>
+                  <Text style={[s.btnTxt, currentAnim===btn.key&&s.btnTxtA]}>{btn.label}</Text>
                 </TouchableOpacity>
               ))}
-              <TouchableOpacity style={styles.resetEggBtn} onPress={handleResetEgg}>
-                <Text style={styles.resetEggText}>🥚 Reiniciar Huevo</Text>
+              <TouchableOpacity style={s.resetBtn} onPress={handleResetEgg}>
+                <Text style={s.resetTxt}>Reiniciar Huevo</Text>
               </TouchableOpacity>
             </View>
           </View>
-
-          {/* REGISTRO DE GASTOS */}
-          <View style={styles.sectionCard}>
-            <Text style={styles.sectionTitle}>💸 Registrar Nuevo Gasto</Text>
-            <View style={styles.inputRow}>
-              <TextInput
-                style={[styles.input, { flex: 2 }]}
-                placeholder="Ej. Almuerzo, Taxi..."
-                value={desc}
-                onChangeText={setDesc}
-              />
-              <TextInput
-                style={[styles.input, { flex: 1 }]}
-                placeholder="Monto $"
-                keyboardType="numeric"
-                value={amount}
-                onChangeText={setAmount}
-              />
+          <View style={s.card}>
+            <Text style={s.cardTitle}>Registrar Nuevo Gasto</Text>
+            <View style={s.row}>
+              <TextInput style={[s.input,{flex:2}]} placeholder="Almuerzo, Taxi..." value={desc} onChangeText={setDesc}/>
+              <TextInput style={[s.input,{flex:1}]} placeholder="Monto" keyboardType="numeric" value={amount} onChangeText={setAmount}/>
             </View>
-            <TouchableOpacity style={styles.registerBtn} onPress={handleAddExpense}>
-              <Text style={styles.registerBtnText}>+ Registrar Gasto y Alimentar</Text>
+            <TouchableOpacity style={s.regBtn} onPress={handleAddExpense}>
+              <Text style={s.regTxt}>+ Registrar Gasto</Text>
             </TouchableOpacity>
           </View>
-
           {expenses.length > 0 && (
-            <View style={styles.sectionCard}>
-              <Text style={styles.sectionTitle}>📋 Transacciones Recientes</Text>
-              {expenses.map((item, idx) => (
-                <View key={item.id} style={styles.expenseItem}>
-                  <Text style={styles.expenseDesc}>#{expenses.length - idx} • {item.desc}</Text>
-                  <Text style={styles.expenseAmount}>${item.amount.toFixed(2)}</Text>
+            <View style={s.card}>
+              <Text style={s.cardTitle}>Transacciones Recientes</Text>
+              {expenses.map((item,idx) => (
+                <View key={item.id} style={s.expItem}>
+                  <Text style={s.expDesc}>#{expenses.length-idx} - {item.desc}</Text>
+                  <Text style={s.expAmt}>${item.amount.toFixed(2)}</Text>
                 </View>
               ))}
             </View>
@@ -443,59 +407,37 @@ export default function App() {
   );
 }
 
-const styles = StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: '#FDFBF7' },
-  container: { padding: 18, alignItems: 'center' },
-  title: { fontSize: 32, fontWeight: '900', color: '#2E7D5B', letterSpacing: 0.5 },
-  subtitle: { fontSize: 13, color: '#7898A8', fontWeight: '600', marginBottom: 12 },
-  progressCard: { width: '100%', backgroundColor: '#EAF6F0', padding: 12, borderRadius: 16, marginBottom: 12 },
-  progressText: { fontSize: 13, fontWeight: '700', color: '#256E4A', marginBottom: 6, textAlign: 'center' },
-  progressBarBg: { width: '100%', height: 10, backgroundColor: '#C8E8D8', borderRadius: 6, overflow: 'hidden' },
-  progressBarFill: { height: '100%', backgroundColor: '#348C60', borderRadius: 6 },
-  mascotStage: {
-    width: '100%', alignItems: 'center', backgroundColor: '#FFFFFF',
-    borderRadius: 24, paddingVertical: 12, paddingHorizontal: 16, marginBottom: 14,
-    borderWidth: 2, borderColor: '#E5EFEA', elevation: 2
-  },
-  canvasBox: { width: STAGE_SIZE, height: STAGE_SIZE, position: 'relative' },
-  layer: { position: 'absolute', top: 0, left: 0, width: STAGE_SIZE, height: STAGE_SIZE },
-  statusBubble: {
-    fontSize: 13, fontWeight: '600', color: '#4A2518', backgroundColor: '#FFF5E4',
-    paddingVertical: 8, paddingHorizontal: 14, borderRadius: 12, textAlign: 'center', marginTop: 6
-  },
-  bowlsRow: { flexDirection: 'row', justifyContent: 'space-around', marginTop: 6 },
-  bowlItem: { alignItems: 'center', backgroundColor: '#F9F7F3', padding: 8, borderRadius: 12, width: 65 },
-  bowlEmoji: { fontSize: 22, marginBottom: 2 },
-  bowlText: { fontSize: 11, fontWeight: '700', color: '#4A2518' },
-  sectionCard: {
-    width: '100%', backgroundColor: '#FFFFFF', borderRadius: 18, padding: 14,
-    marginBottom: 14, borderWidth: 1, borderColor: '#ECEAE4'
-  },
-  sectionTitle: { fontSize: 14, fontWeight: '800', color: '#4A2518', marginBottom: 10 },
-  buttonGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, justifyContent: 'center' },
-  animBtn: {
-    backgroundColor: '#F3EFEA', paddingVertical: 8, paddingHorizontal: 12,
-    borderRadius: 12, borderWidth: 1.5, borderColor: '#E0D6C8'
-  },
-  animBtnActive: { backgroundColor: '#348C60', borderColor: '#256E4A' },
-  animBtnText: { fontSize: 12, fontWeight: '700', color: '#4A2518' },
-  animBtnTextActive: { color: '#FFFFFF' },
-  resetEggBtn: {
-    backgroundColor: '#FFF0EE', paddingVertical: 8, paddingHorizontal: 14,
-    borderRadius: 12, borderWidth: 1.5, borderColor: '#F48B82', marginTop: 4
-  },
-  resetEggText: { fontSize: 12, fontWeight: '700', color: '#B5382E' },
-  inputRow: { flexDirection: 'row', gap: 8, marginBottom: 10 },
-  input: {
-    backgroundColor: '#F9F7F3', borderWidth: 1.5, borderColor: '#E2DCD3',
-    borderRadius: 12, paddingHorizontal: 12, paddingVertical: 10, fontSize: 13, color: '#333'
-  },
-  registerBtn: { backgroundColor: '#F69B42', paddingVertical: 13, borderRadius: 14, alignItems: 'center' },
-  registerBtnText: { color: '#FFFFFF', fontSize: 15, fontWeight: '800' },
-  expenseItem: {
-    flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 8,
-    borderBottomWidth: 1, borderBottomColor: '#F2EFE9'
-  },
-  expenseDesc: { fontSize: 13, fontWeight: '600', color: '#4A2518' },
-  expenseAmount: { fontSize: 13, fontWeight: '800', color: '#2E7D5B' }
+const s = StyleSheet.create({
+  safe:     { flex:1, backgroundColor:"#FDFBF7" },
+  container:{ padding:18, alignItems:"center" },
+  title:    { fontSize:32, fontWeight:"900", color:"#2E7D5B", letterSpacing:0.5 },
+  sub:      { fontSize:13, color:"#7898A8", fontWeight:"600", marginBottom:12 },
+  progCard: { width:"100%", backgroundColor:"#EAF6F0", padding:12, borderRadius:16, marginBottom:12 },
+  progTxt:  { fontSize:13, fontWeight:"700", color:"#256E4A", marginBottom:6, textAlign:"center" },
+  progBg:   { width:"100%", height:10, backgroundColor:"#C8E8D8", borderRadius:6, overflow:"hidden" },
+  progFill: { height:"100%", backgroundColor:"#348C60", borderRadius:6 },
+  stage:    { width:"100%", alignItems:"center", backgroundColor:"#FFFFFF", borderRadius:24, paddingVertical:12, paddingHorizontal:16, marginBottom:14, borderWidth:2, borderColor:"#E5EFEA", elevation:2 },
+  canvas:   { width:STAGE_SIZE, height:STAGE_SIZE, position:"relative" },
+  layer:    { position:"absolute", top:0, left:0, width:STAGE_SIZE, height:STAGE_SIZE },
+  status:   { fontSize:13, fontWeight:"600", color:"#4A2518", backgroundColor:"#FFF5E4", paddingVertical:8, paddingHorizontal:14, borderRadius:12, textAlign:"center", marginTop:6 },
+  bowls:    { flexDirection:"row", justifyContent:"space-around", marginTop:6 },
+  bowl:     { alignItems:"center", backgroundColor:"#F9F7F3", padding:8, borderRadius:12, width:65 },
+  bowlE:    { fontSize:22, marginBottom:2 },
+  bowlT:    { fontSize:11, fontWeight:"700", color:"#4A2518" },
+  card:     { width:"100%", backgroundColor:"#FFFFFF", borderRadius:18, padding:14, marginBottom:14, borderWidth:1, borderColor:"#ECEAE4" },
+  cardTitle:{ fontSize:14, fontWeight:"800", color:"#4A2518", marginBottom:10 },
+  btnGrid:  { flexDirection:"row", flexWrap:"wrap", gap:8, justifyContent:"center" },
+  btn:      { backgroundColor:"#F3EFEA", paddingVertical:8, paddingHorizontal:12, borderRadius:12, borderWidth:1.5, borderColor:"#E0D6C8" },
+  btnA:     { backgroundColor:"#348C60", borderColor:"#256E4A" },
+  btnTxt:   { fontSize:12, fontWeight:"700", color:"#4A2518" },
+  btnTxtA:  { color:"#FFFFFF" },
+  resetBtn: { backgroundColor:"#FFF0EE", paddingVertical:8, paddingHorizontal:14, borderRadius:12, borderWidth:1.5, borderColor:"#F48B82", marginTop:4 },
+  resetTxt: { fontSize:12, fontWeight:"700", color:"#B5382E" },
+  row:      { flexDirection:"row", gap:8, marginBottom:10 },
+  input:    { backgroundColor:"#F9F7F3", borderWidth:1.5, borderColor:"#E2DCD3", borderRadius:12, paddingHorizontal:12, paddingVertical:10, fontSize:13, color:"#333" },
+  regBtn:   { backgroundColor:"#F69B42", paddingVertical:13, borderRadius:14, alignItems:"center" },
+  regTxt:   { color:"#FFFFFF", fontSize:15, fontWeight:"800" },
+  expItem:  { flexDirection:"row", justifyContent:"space-between", paddingVertical:8, borderBottomWidth:1, borderBottomColor:"#F2EFE9" },
+  expDesc:  { fontSize:13, fontWeight:"600", color:"#4A2518" },
+  expAmt:   { fontSize:13, fontWeight:"800", color:"#2E7D5B" },
 });
